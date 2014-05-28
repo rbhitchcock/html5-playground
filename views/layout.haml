@@ -1,0 +1,28 @@
+!!!
+%html
+  %head
+    %title HTML5 Playground
+    %link{rel: "stylesheet", href: "/lib/css/bootstrap.min.css"}
+    %link{rel: "stylesheet", href: "/app/css/app.css"}
+    %script{type: "text/javascript", src: "/lib/js/jquery-2.0.3.min.js"}
+    %script{type: "text/javascript", src: "/lib/js/bootstrap.min.js"}
+  %body
+    %nav.navbar.navbar-default{role: "navigation"}
+      .container
+        .navbar-header
+          %a{class: "navbar-brand", href: "/"} HTML5 Playground
+        .collapse.navbar-collapse
+          %ul.nav.navbar-nav
+            %li.dropdown
+              %a.dropdown-toggle{href: "#", :"data-toggle" => "dropdown"}
+                postMessage
+                %b.caret
+              %ul.dropdown-menu
+                %li
+                  %a{href: '/postmessage/fuzzer'} Automatic Fuzzer
+                %li
+                  %a{href: '/postmessage/manual'} Manual Tester
+            %li
+              %a{href: '/sandbox'} sandbox
+    .container#html5-content
+      = yield

@@ -1,0 +1,44 @@
+%form.well#editor
+  .form-group
+    %label{:for => "code-field"} JS Editor
+    %textarea#code-field{style: "width:400px;height:150px"}
+  .form-group
+    .btn-group
+      %a.btn.btn-primary#safe-evaluate Safe eval
+      %a.btn.btn-danger#unsafe-evaluate Unsafe eval
+
+.sandboxed{style: "float:left;width:50%"}
+  %h3 Sandboxed
+  %iframe#safe-evaluator{name: "evaluator", sandbox: "allow-scripts"}
+.wildwest{style: "float:left; width:50%"}
+  %h3 Wild Wild West
+  %iframe#unsafe-evaluator{name: "evaluator"}
+
+:javascript
+  var safe_iframe = window.frames[0];
+  var unsafe_iframe = window.frames[1];
+
+  $.get('/example/evaluator.txt', function(data, textStatus, xhr) {
+    $('iframe#safe-evaluator').attr('src', 'data:text/html;charset=utf-8,'+encodeURIComponent(data)); 
+    $('iframe#unsafe-evaluator').attr('src', 'data:text/html;charset=utf-8,'+encodeURIComponent(data)); 
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.origin === "null" && e.source === safe_iframe) {
+      alert('Response from receiver');
+    } else if (e.source === unsafe_iframe) {
+      alert('Response from receiver');
+    }
+  });
+
+  $('#safe-evaluate').click(function(e) {
+    e.preventDefault();
+    var code = $('#code-field').val();
+    safe_iframe.postMessage(code, '*');
+  });
+
+  $('#unsafe-evaluate').click(function(e) {
+    e.preventDefault();
+    var code = $('#code-field').val();
+    unsafe_iframe.postMessage(code, '*');
+  });
